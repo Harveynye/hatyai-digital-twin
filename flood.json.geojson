@@ -1,0 +1,13 @@
+{
+"type": "FeatureCollection",
+"name": "flood",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "time": "2026-04-15T16:40:00", "water_level_msl": 2.67, "station_name_en": "Song Khla Lake 2", "station_code": "SLA002", "lat": 6.93123, "lon": 100.43991, "district": "Khlong Hoi Khong District", "subdistrict": "Thung Lan", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.43991, 6.93123 ] } },
+{ "type": "Feature", "properties": { "time": "2026-04-09T17:00:00", "water_level_msl": 10.0, "station_name_en": null, "station_code": "X.173A", "lat": 6.79663, "lon": 100.442337, "district": "Sadao District", "subdistrict": "Phang La", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.442337, 6.79663 ] } },
+{ "type": "Feature", "properties": { "time": "2026-04-09T17:00:00", "water_level_msl": 4.77, "station_name_en": null, "station_code": "X.174", "lat": 6.98637, "lon": 100.481857, "district": "Hat Yai District", "subdistrict": "Kho Hong", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.481857, 6.98637 ] } },
+{ "type": "Feature", "properties": { "time": "2026-04-09T17:00:00", "water_level_msl": 17.64, "station_name_en": null, "station_code": "X.240", "lat": 6.98306, "lon": 100.328331, "district": "Hat Yai District", "subdistrict": "Thung Tam Sao", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.328331, 6.98306 ] } },
+{ "type": "Feature", "properties": { "time": "2026-04-09T15:00:00", "water_level_msl": 0.13, "station_name_en": null, "station_code": "X.44", "lat": 7.00218, "lon": 100.456062, "district": "Hat Yai District", "subdistrict": "Hat Yai", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.456062, 7.00218 ] } },
+{ "type": "Feature", "properties": { "time": "2026-04-09T17:00:00", "water_level_msl": 2.85, "station_name_en": null, "station_code": "X.90", "lat": 6.93124, "lon": 100.439857, "district": "Hat Yai District", "subdistrict": "Ban Phru", "province": "Songkhla" }, "geometry": { "type": "Point", "coordinates": [ 100.439857, 6.93124 ] } }
+]
+}
