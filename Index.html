@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hat Yai Flood Digital Twin</title>
+
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.124/Build/Cesium/Cesium.js"></script>
+
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.124/Build/Cesium/Widgets/widgets.css"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="cesiumContainer"></div>
+
+    <div id="infoBox">
+        <h2>Hat Yai Flood Digital Twin</h2>
+
+        <p>
+            Web-based digital twin integrating:
+        </p>
+
+        <ul>
+    <li>Flood-risk modelling</li>
+    <li>Rainfall monitoring stations</li>
+    <li>Water-level monitoring stations</li>
+    <li>3D terrain and buildings</li>
+</ul>
+
+<button id="generateFloodBtn">
+    Generate Dynamic Flood Extent
+</button>
+
+<button id="clearFloodBtn">
+    Clear Dynamic Flood
+</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

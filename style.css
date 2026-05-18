@@ -29,3 +29,20 @@ body,
 #infoBox h2 {
     margin-top: 0;
 }
+#generateFloodBtn,
+#clearFloodBtn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    background: #00d5ff;
+    color: #00111f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#clearFloodBtn {
+    background: #ff4d4d;
+    color: white;
+}
