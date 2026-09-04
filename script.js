@@ -51,7 +51,7 @@ async function main() {
     viewer.dataSources.add(rainfall);
 
     rainfall.entities.values.forEach(entity => {
-        const rain = Number(entity.properties?.rain_24h?.getValue()) || 0;
+        const rain = Number(entity.properties?.rain_24h_mm?.getValue()) || 0;
 
         let color = Cesium.Color.BLUE;
 
