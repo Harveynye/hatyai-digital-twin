@@ -44,11 +44,13 @@ async function main() {
     // -----------------------------
     // RAINFALL STATIONS
     // -----------------------------
-    const rainfall = await Cesium.GeoJsonDataSource.load(
-        "rainfall.gson.geojson"
-    );
+ const response = await fetch(
+    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
+);
 
-    viewer.dataSources.add(rainfall);
+const thaiWaterData = await response.json();
+
+console.log(thaiWaterData.data);
 
     rainfall.entities.values.forEach(entity => {
         const rain = Number(entity.properties?.rain_24h_mm?.getValue()) || 0;
