@@ -52,35 +52,58 @@ const thaiWaterData = await response.json();
 
 console.log(thaiWaterData.data);
 
-    rainfall.entities.values.forEach(entity => {
-        const rain = Number(entity.properties?.rain_24h_mm?.getValue()) || 0;
+    thaiWaterData.data.forEach(station => {
+    const province = station.geocode?.province_name?.en;
 
-        let color = Cesium.Color.BLUE;
+    if (province !== "Songkhla") {
+        return;
+    }
 
-        if (rain >= 40) {
-            color = Cesium.Color.RED;
-        } else if (rain >= 10) {
-            color = Cesium.Color.ORANGE;
-        } else if (rain >= 1) {
-            color = Cesium.Color.CYAN;
-        }
+    const rain = Number(station.rain_24h) || 0;
+    const lat = station.station?.tele_station_lat;
+    const lon = station.station?.tele_station_long;
+    const name =
+        station.station?.tele_station_name?.en || "Unknown station";
+    const code =
+        station.station?.tele_station_oldcode || "Unknown";
+    const time =
+        station.rainfall_datetime || "Unknown";
 
-        entity.billboard = undefined;
-        liftPointAboveGround(entity, 800);
+    if (lat == null || lon == null) {
+        return;
+    }
 
-        entity.point = new Cesium.PointGraphics({
+    let color = Cesium.Color.BLUE;
+
+    if (rain >= 40) {
+        color = Cesium.Color.RED;
+    } else if (rain >= 10) {
+        color = Cesium.Color.ORANGE;
+    } else if (rain >= 1) {
+        color = Cesium.Color.CYAN;
+    }
+
+    viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(lon, lat, 800),
+
+        point: {
             pixelSize: 24,
             color: color,
             outlineColor: Cesium.Color.WHITE,
             outlineWidth: 4,
             disableDepthTestDistance: Number.POSITIVE_INFINITY
-        });
+        },
 
-        entity.description = `
-            <h3>Rainfall Station</h3>
+        description: `
+            <h3>${name}</h3>
+            <p><b>Station Code:</b> ${code}</p>
             <p><b>24h Rainfall:</b> ${rain} mm</p>
-        `;
+            <p><b>Updated:</b> ${time}</p>
+        `
     });
+});
+      
+
 
     // -----------------------------
     // WATER LEVEL STATIONS
