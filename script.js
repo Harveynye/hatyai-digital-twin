@@ -52,7 +52,7 @@ const thaiWaterData = await response.json();
 
 console.log(thaiWaterData.data);
 
-    thaiWaterData.data.forEach(station => {
+thaiWaterData.data.forEach(station => {
     const province = station.geocode?.province_name?.en;
 
     if (province !== "Songkhla") {
