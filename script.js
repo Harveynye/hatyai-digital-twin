@@ -108,40 +108,87 @@ thaiWaterData.data.forEach(station => {
     // -----------------------------
     // WATER LEVEL STATIONS
     // -----------------------------
-    const waterLevel = await Cesium.GeoJsonDataSource.load(
-        "flood.json.geojson"
-    );
+    // -----------------------------
+// WATER LEVEL STATIONS
+// -----------------------------
+const waterResponse = await fetch(
+    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/waterlevel_load"
+);
 
-    viewer.dataSources.add(waterLevel);
+const waterData = await waterResponse.json();
 
-    waterLevel.entities.values.forEach(entity => {
-        const level =
-            Number(entity.properties?.water_level_msl?.getValue()) || 0;
+const waterLevel = new Cesium.CustomDataSource("Live Water Level");
 
-        let color = Cesium.Color.YELLOW;
+viewer.dataSources.add(waterLevel);
 
-        if (level >= 10) {
-            color = Cesium.Color.RED;
-        } else if (level >= 5) {
-            color = Cesium.Color.ORANGE;
-        }
+waterData.waterlevel_data.data.forEach(station => {
+    const province = station.geocode?.province_name?.en;
 
-        entity.billboard = undefined;
-        liftPointAboveGround(entity, 1200);
+    if (province !== "Songkhla") {
+        return;
+    }
 
-        entity.point = new Cesium.PointGraphics({
+    const level = Number(station.waterlevel_msl);
+
+    const lat = station.station?.tele_station_lat;
+    const lon = station.station?.tele_station_long;
+
+    const name =
+        station.station?.tele_station_name?.en || "Unknown station";
+
+    const code =
+        station.station?.tele_station_oldcode || "Unknown";
+
+    const time =
+        station.waterlevel_datetime || "Unknown";
+
+    if (
+        lat == null ||
+        lon == null ||
+        station.waterlevel_msl == null
+    ) {
+        return;
+    }
+
+    let color = Cesium.Color.YELLOW;
+
+    if (level >= 10) {
+        color = Cesium.Color.RED;
+    } else if (level >= 5) {
+        color = Cesium.Color.ORANGE;
+    }
+
+    waterLevel.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(
+            lon,
+            lat,
+            1200
+        ),
+
+        properties: {
+            water_level_msl: level,
+            station_code: code,
+            station_name: name,
+            time: time
+        },
+
+        point: {
             pixelSize: 28,
             color: color,
             outlineColor: Cesium.Color.BLACK,
             outlineWidth: 4,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY
-        });
+            disableDepthTestDistance:
+                Number.POSITIVE_INFINITY
+        },
 
-        entity.description = `
-            <h3>Water Level Station</h3>
+        description: `
+            <h3>${name}</h3>
+            <p><b>Station Code:</b> ${code}</p>
             <p><b>Water Level:</b> ${level} m MSL</p>
-        `;
+            <p><b>Updated:</b> ${time}</p>
+        `
     });
+});
 
     // -----------------------------
     // TURF.JS DYNAMIC FLOOD EXTENT
