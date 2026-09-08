@@ -150,13 +150,17 @@ waterData.waterlevel_data.data.forEach(station => {
         return;
     }
 
-    let color = Cesium.Color.YELLOW;
+const diffBank = Number(station.diff_wl_bank);
 
-    if (level >= 10) {
+let color = Cesium.Color.YELLOW;
+
+if (!Number.isNaN(diffBank)) {
+    if (diffBank <= 0) {
         color = Cesium.Color.RED;
-    } else if (level >= 5) {
+    } else if (diffBank <= 1) {
         color = Cesium.Color.ORANGE;
     }
+}
 
     waterLevel.entities.add({
         position: Cesium.Cartesian3.fromDegrees(
