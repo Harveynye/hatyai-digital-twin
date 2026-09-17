@@ -171,6 +171,7 @@ if (!Number.isNaN(diffBank)) {
 
         properties: {
             water_level_msl: level,
+            diff_wl_bank: diffBank,
             station_code: code,
             station_name: name,
             time: time
