@@ -211,8 +211,11 @@ if (!Number.isNaN(diffBank)) {
             const level =
                 Number(entity.properties?.water_level_msl?.getValue()) || 0;
 
-            // Trigger condition for prototype flood extent
-            if (level >= 2) {
+            const diffBank =
+    Number(entity.properties?.diff_wl_bank?.getValue());
+
+// Trigger flood extent when water reaches or exceeds bank level
+if (!Number.isNaN(diffBank) && diffBank <= 0) {
                 const position =
                     entity.position.getValue(Cesium.JulianDate.now());
 
