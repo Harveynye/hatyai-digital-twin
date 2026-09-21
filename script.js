@@ -243,7 +243,11 @@ if (!Number.isNaN(diffBank) && diffBank <= 0) {
                 floodFeatures.push(bufferedFlood);
             }
         });
-
+        
+if (floodFeatures.length === 0) {
+    alert("No current bank exceedances detected. Dynamic flood extent not generated.");
+    return;
+}
         const floodCollection = turf.featureCollection(floodFeatures);
 
         dynamicFloodLayer = await Cesium.GeoJsonDataSource.load(
