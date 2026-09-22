@@ -272,53 +272,69 @@ document
             viewer.dataSources.remove(dynamicFloodLayer);
         }
 
-        const floodFeatures = [];
+     const floodFeatures = [];
 
-        waterLevel.entities.values.forEach(entity => {
-            const position =
-                entity.position.getValue(Cesium.JulianDate.now());
+waterLevel.entities.values.forEach(entity => {
 
-            const cartographic =
-                Cesium.Cartographic.fromCartesian(position);
+    const code =
+        entity.properties?.station_code?.getValue();
 
-            const lon =
-                Cesium.Math.toDegrees(cartographic.longitude);
+    const targetStations = [
+        "X.44",
+        "X.90",
+        "X.174",
+        "X.173A",
+        "X.240",
+        "SLA002"
+    ];
 
-            const lat =
-                Cesium.Math.toDegrees(cartographic.latitude);
+    if (!targetStations.includes(code)) {
+        return;
+    }
 
-            const simulatedFlood = turf.buffer(
-                turf.point([lon, lat]),
-                1.5,
-                { units: "kilometers" }
-            );
+    const position =
+        entity.position.getValue(Cesium.JulianDate.now());
 
-            floodFeatures.push(simulatedFlood);
-        });
+    const cartographic =
+        Cesium.Cartographic.fromCartesian(position);
 
-        const floodCollection =
-            turf.featureCollection(floodFeatures);
+    const lon =
+        Cesium.Math.toDegrees(cartographic.longitude);
 
-        dynamicFloodLayer =
-            await Cesium.GeoJsonDataSource.load(
-                floodCollection,
-                {
-                    stroke: Cesium.Color.CYAN,
-                    fill: Cesium.Color.CYAN.withAlpha(0.4),
-                    strokeWidth: 3
-                }
-            );
+    const lat =
+        Cesium.Math.toDegrees(cartographic.latitude);
 
-        viewer.dataSources.add(dynamicFloodLayer);
+    const simulatedFlood = turf.buffer(
+        turf.point([lon, lat]),
+        1.5,
+        { units: "kilometers" }
+    );
+
+    floodFeatures.push(simulatedFlood);
+});
+
+const floodCollection =
+    turf.featureCollection(floodFeatures);
+
+dynamicFloodLayer =
+    await Cesium.GeoJsonDataSource.load(
+        floodCollection,
+        {
+            stroke: Cesium.Color.CYAN,
+            fill: Cesium.Color.CYAN.withAlpha(0.4),
+            strokeWidth: 3
+        }
+    );
+
+viewer.dataSources.add(dynamicFloodLayer);
+});
+
+document
+    .getElementById("clearFloodBtn")
+    .addEventListener("click", () => {
+        if (dynamicFloodLayer) {
+            viewer.dataSources.remove(dynamicFloodLayer);
+            dynamicFloodLayer = null;
+        }
     });
-    document
-        .getElementById("clearFloodBtn")
-        .addEventListener("click", () => {
-            if (dynamicFloodLayer) {
-                viewer.dataSources.remove(dynamicFloodLayer);
-                dynamicFloodLayer = null;
-            }
-        });
-}
-
-main();
+}  
