@@ -265,7 +265,52 @@ if (floodFeatures.length === 0) {
     document
         .getElementById("generateFloodBtn")
         .addEventListener("click", generateDynamicFloodExtent);
+document
+    .getElementById("simulateFloodBtn")
+    .addEventListener("click", async () => {
+        if (dynamicFloodLayer) {
+            viewer.dataSources.remove(dynamicFloodLayer);
+        }
 
+        const floodFeatures = [];
+
+        waterLevel.entities.values.forEach(entity => {
+            const position =
+                entity.position.getValue(Cesium.JulianDate.now());
+
+            const cartographic =
+                Cesium.Cartographic.fromCartesian(position);
+
+            const lon =
+                Cesium.Math.toDegrees(cartographic.longitude);
+
+            const lat =
+                Cesium.Math.toDegrees(cartographic.latitude);
+
+            const simulatedFlood = turf.buffer(
+                turf.point([lon, lat]),
+                1.5,
+                { units: "kilometers" }
+            );
+
+            floodFeatures.push(simulatedFlood);
+        });
+
+        const floodCollection =
+            turf.featureCollection(floodFeatures);
+
+        dynamicFloodLayer =
+            await Cesium.GeoJsonDataSource.load(
+                floodCollection,
+                {
+                    stroke: Cesium.Color.CYAN,
+                    fill: Cesium.Color.CYAN.withAlpha(0.4),
+                    strokeWidth: 3
+                }
+            );
+
+        viewer.dataSources.add(dynamicFloodLayer);
+    });
     document
         .getElementById("clearFloodBtn")
         .addEventListener("click", () => {
