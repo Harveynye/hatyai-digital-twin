@@ -31,7 +31,7 @@ async function main() {
     // FLOOD SUSCEPTIBILITY LAYER
     // -----------------------------
     const floodRisk = await Cesium.GeoJsonDataSource.load(
-        "flood_risk_simplified.geojson",
+       "clipped_flood_risk.geojson",
         {
             stroke: Cesium.Color.RED,
             fill: Cesium.Color.RED.withAlpha(0.12),
