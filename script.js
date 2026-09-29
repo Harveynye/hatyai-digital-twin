@@ -30,16 +30,24 @@ async function main() {
     // -----------------------------
     // FLOOD SUSCEPTIBILITY LAYER
     // -----------------------------
-    const floodRisk = await Cesium.GeoJsonDataSource.load(
-       "clipped_flood_risk.geojson",
-        {
-            stroke: Cesium.Color.RED,
-            fill: Cesium.Color.RED.withAlpha(0.12),
-            strokeWidth: 0
-        }
-    );
+   const floodRisk = await Cesium.GeoJsonDataSource.load(
+    "clipped_flood_risk.geojson",
+    {
+        stroke: Cesium.Color.RED,
+        fill: Cesium.Color.RED.withAlpha(0.20),
+        strokeWidth: 2,
+        clampToGround: true
+    }
+);
 
-    viewer.dataSources.add(floodRisk);
+viewer.dataSources.add(floodRisk);
+
+floodRisk.entities.values.forEach(entity => {
+    if (entity.polygon) {
+        entity.polygon.material =
+            Cesium.Color.RED.withAlpha(0.20);
+    }
+});
 
     // -----------------------------
     // RAINFALL STATIONS
