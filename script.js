@@ -52,70 +52,92 @@ floodRisk.entities.values.forEach(entity => {
     // -----------------------------
     // RAINFALL STATIONS
     // -----------------------------
- const response = await fetch(
-    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
-);
 
-const thaiWaterData = await response.json();
+try {
+    const response = await fetch(
+        "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
+    );
 
-console.log(thaiWaterData.data);
-
-thaiWaterData.data.forEach(station => {
-    const province = station.geocode?.province_name?.en;
-
-    if (province !== "Songkhla") {
-        return;
+    if (!response.ok) {
+        throw new Error(
+            `ThaiWater rainfall API returned ${response.status}`
+        );
     }
 
-    const rain = Number(station.rain_24h) || 0;
-    const lat = station.station?.tele_station_lat;
-    const lon = station.station?.tele_station_long;
-    const name =
-        station.station?.tele_station_name?.en || "Unknown station";
-    const code =
-        station.station?.tele_station_oldcode || "Unknown";
-    const time =
-        station.rainfall_datetime || "Unknown";
+    const thaiWaterData = await response.json();
 
-    if (lat == null || lon == null) {
-        return;
-    }
+    console.log("Rainfall data loaded:", thaiWaterData.data);
 
-    let color = Cesium.Color.BLUE;
+    thaiWaterData.data.forEach(station => {
+        const province = station.geocode?.province_name?.en;
 
-    if (rain >= 40) {
-        color = Cesium.Color.RED;
-    } else if (rain >= 10) {
-        color = Cesium.Color.ORANGE;
-    } else if (rain >= 1) {
-        color = Cesium.Color.CYAN;
-    }
+        if (province !== "Songkhla") {
+            return;
+        }
 
-    viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(lon, lat, 800),
+        const rain = Number(station.rain_24h) || 0;
+        const lat = station.station?.tele_station_lat;
+        const lon = station.station?.tele_station_long;
 
-        point: {
-            pixelSize: 24,
-            color: color,
-            outlineColor: Cesium.Color.WHITE,
-            outlineWidth: 4,
-            disableDepthTestDistance: Number.POSITIVE_INFINITY
-        },
+        const name =
+            station.station?.tele_station_name?.en ||
+            "Unknown station";
 
-        description: `
-            <h3>${name}</h3>
-            <p><b>Station Code:</b> ${code}</p>
-            <p><b>24h Rainfall:</b> ${rain} mm</p>
-            <p><b>Updated:</b> ${time}</p>
-        `
+        const code =
+            station.station?.tele_station_oldcode ||
+            "Unknown";
+
+        const time =
+            station.rainfall_datetime ||
+            "Unknown";
+
+        if (lat == null || lon == null) {
+            return;
+        }
+
+        let color = Cesium.Color.BLUE;
+
+        if (rain >= 40) {
+            color = Cesium.Color.RED;
+        } else if (rain >= 10) {
+            color = Cesium.Color.ORANGE;
+        } else if (rain >= 1) {
+            color = Cesium.Color.CYAN;
+        }
+
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(
+                lon,
+                lat,
+                800
+            ),
+
+            point: {
+                pixelSize: 24,
+                color: color,
+                outlineColor: Cesium.Color.WHITE,
+                outlineWidth: 4,
+                disableDepthTestDistance:
+                    Number.POSITIVE_INFINITY
+            },
+
+            description: `
+                <h3>${name}</h3>
+                <p><b>Station Code:</b> ${code}</p>
+                <p><b>24h Rainfall:</b> ${rain} mm</p>
+                <p><b>Updated:</b> ${time}</p>
+            `
+        });
     });
-});
-      
+
+} catch (error) {
+    console.error(
+        "Rainfall data could not be loaded:",
+        error
+    );
+}
 
 
-    // -----------------------------
-    // WATER LEVEL STATIONS
-    // -----------------------------
     // -----------------------------
 // WATER LEVEL STATIONS
 // -----------------------------
