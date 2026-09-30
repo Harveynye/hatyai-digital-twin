@@ -136,6 +136,23 @@ waterData.waterlevel_data.data.forEach(station => {
         return;
     }
 
+  
+    const targetStations = [
+        "X.44",
+        "X.90",
+        "X.174",
+        "X.173A",
+        "X.240",
+        "SLA002"
+    ];
+
+    const stationCode =
+        station.station?.tele_station_oldcode;
+
+    if (!targetStations.includes(stationCode)) {
+        return;
+    }
+
     const level = Number(station.waterlevel_msl);
 
     const lat = station.station?.tele_station_lat;
