@@ -52,96 +52,69 @@ floodRisk.entities.values.forEach(entity => {
     // -----------------------------
     // RAINFALL STATIONS
     // -----------------------------
-
 // -----------------------------
 // RAINFALL STATIONS
 // -----------------------------
-try {
-    const response = await fetch(
-        "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
-    );
+const response = await fetch(
+    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
+);
 
-    if (!response.ok) {
-        console.warn(
-            `Rainfall API unavailable: ${response.status}. Continuing without rainfall.`
-        );
-    } else {
-        const thaiWaterData = await response.json();
+const thaiWaterData = await response.json();
 
-        thaiWaterData.data.forEach(station => {
-            const province = station.geocode?.province_name?.en;
+console.log(thaiWaterData.data);
 
-            if (province !== "Songkhla") {
-                return;
-            }
+thaiWaterData.data.forEach(station => {
+    const province = station.geocode?.province_name?.en;
 
-            const rain = Number(station.rain_24h) || 0;
-            const lat = Number(station.station?.tele_station_lat);
-            const lon = Number(station.station?.tele_station_long);
-
-            const name =
-                station.station?.tele_station_name?.en ||
-                "Unknown station";
-
-            const code =
-                station.station?.tele_station_oldcode ||
-                "Unknown";
-
-            const time =
-                station.rainfall_datetime ||
-                "Unknown";
-
-            if (
-                !Number.isFinite(lat) ||
-                !Number.isFinite(lon)
-            ) {
-                return;
-            }
-
-            let color = Cesium.Color.BLUE;
-
-            if (rain >= 40) {
-                color = Cesium.Color.RED;
-            } else if (rain >= 10) {
-                color = Cesium.Color.ORANGE;
-            } else if (rain >= 1) {
-                color = Cesium.Color.CYAN;
-            }
-
-            viewer.entities.add({
-                position:
-                    Cesium.Cartesian3.fromDegrees(
-                        lon,
-                        lat,
-                        800
-                    ),
-
-                point: {
-                    pixelSize: 24,
-                    color: color,
-                    outlineColor: Cesium.Color.WHITE,
-                    outlineWidth: 4,
-                    disableDepthTestDistance:
-                        Number.POSITIVE_INFINITY
-                },
-
-                description: `
-                    <h3>${name}</h3>
-                    <p><b>Station Code:</b> ${code}</p>
-                    <p><b>24h Rainfall:</b> ${rain} mm</p>
-                    <p><b>Updated:</b> ${time}</p>
-                `
-            });
-        });
+    if (province !== "Songkhla") {
+        return;
     }
 
-} catch (error) {
-    console.warn(
-        "Rainfall data could not be loaded. Continuing application.",
-        error
-    );
-}
+    const rain = Number(station.rain_24h) || 0;
+    const lat = station.station?.tele_station_lat;
+    const lon = station.station?.tele_station_long;
+    const name =
+        station.station?.tele_station_name?.en || "Unknown station";
+    const code =
+        station.station?.tele_station_oldcode || "Unknown";
+    const time =
+        station.rainfall_datetime || "Unknown";
 
+    if (lat == null || lon == null) {
+        return;
+    }
+
+    let color = Cesium.Color.BLUE;
+
+    if (rain >= 40) {
+        color = Cesium.Color.RED;
+    } else if (rain >= 10) {
+        color = Cesium.Color.ORANGE;
+    } else if (rain >= 1) {
+        color = Cesium.Color.CYAN;
+    }
+
+    viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(lon, lat, 800),
+
+        point: {
+            pixelSize: 24,
+            color: color,
+            outlineColor: Cesium.Color.WHITE,
+            outlineWidth: 4,
+            disableDepthTestDistance: Number.POSITIVE_INFINITY
+        },
+
+        description: `
+            <h3>${name}</h3>
+            <p><b>Station Code:</b> ${code}</p>
+            <p><b>24h Rainfall:</b> ${rain} mm</p>
+            <p><b>Updated:</b> ${time}</p>
+        `
+    });
+});
+
+  
     // -----------------------------
 // WATER LEVEL STATIONS
 // -----------------------------
@@ -159,26 +132,6 @@ waterData.waterlevel_data.data.forEach(station => {
     const province = station.geocode?.province_name?.en;
 
     if (province !== "Songkhla") {
-        return;
-    }
-console.log(
-    "WATER STATION:",
-    station.station
-);
-  
-    const targetStations = [
-        "X.44",
-        "X.90",
-        "X.174",
-        "X.173A",
-        "X.240",
-        "SLA002"
-    ];
-
-    const stationCode =
-        station.station?.tele_station_oldcode;
-
-    if (!targetStations.includes(stationCode)) {
         return;
     }
 
