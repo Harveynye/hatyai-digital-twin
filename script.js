@@ -135,7 +135,10 @@ waterData.waterlevel_data.data.forEach(station => {
     if (province !== "Songkhla") {
         return;
     }
-
+console.log(
+    "WATER STATION:",
+    station.station
+);
   
     const targetStations = [
         "X.44",
