@@ -55,9 +55,7 @@ floodRisk.entities.values.forEach(entity => {
 // -----------------------------
 // RAINFALL STATIONS
 // -----------------------------
-const response = await fetch(
-    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/rain_24h"
-);
+const response = await fetch("latest_rainfall.json");
 
 const thaiWaterData = await response.json();
 
@@ -118,9 +116,7 @@ thaiWaterData.data.forEach(station => {
     // -----------------------------
 // WATER LEVEL STATIONS
 // -----------------------------
-const waterResponse = await fetch(
-    "https://api-v3.thaiwater.net/api/v1/thaiwater30/public/waterlevel_load"
-);
+const waterResponse = await fetch("latest_waterlevel.json");
 
 const waterData = await waterResponse.json();
 
