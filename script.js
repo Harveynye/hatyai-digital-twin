@@ -52,9 +52,7 @@ floodRisk.entities.values.forEach(entity => {
     // -----------------------------
     // RAINFALL STATIONS
     // -----------------------------
-// -----------------------------
-// RAINFALL STATIONS
-// -----------------------------
+
 const response = await fetch("latest_rainfall.json");
 
 const thaiWaterData = await response.json();
